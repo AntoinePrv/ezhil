@@ -1,36 +1,43 @@
-<!DOCTYPE html>
-<html>
-{{ partial "header.html" . }}
-<body>
-	<div class="container wrapper">
-		{{ partial "head.html" . }}
-
-		{{ with .Content }}{{ . }}{{ end }}
-
-		<div class="recent-posts section">
-			<h2 class="section-header">
-				Recent posts
-			</h2>
-			<div class="posts">
-				{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-				{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
-				{{ range $paginator.Pages }}
-				<div class="post">
-					<div class="meta">{{ dateFormat "Jan 2, 2006" .Date }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</div>
-					<a class="title" href="{{ .RelPermalink }}">{{.Title}}</a> &mdash;
-					<span class="description">
-						{{ if isset .Params "description" }}
-						{{ .Description }}
-						{{ else }}
-						{{ .Summary }}&hellip;
-						{{ end }}
-					</span>
-				</div>
-				{{ end }}
-				{{ template "partials/paginator.html" . }}
-			</div>
+{{ define "header" }}
+<div class="header">
+	<base href="{{ .Site.BaseURL }}">
+	<img src={{ "profile.jpg" | absURL }} class="profile-image">
+	<div class="site-description">
+		<div>
+			<h1 class="site-title"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
+			{{- with .Params.Subtitle -}}
+				<h2>{{ . | markdownify }}</h2>
+			{{- end -}}
+		</div>
+		<div class="align-right">
+			<nav class="nav social">
+				<ul class="flat">
+					{{- range $index, $key := .Site.Params.Social -}}
+					<a href="{{ $key.url }}" title="{{ $key.name }}"><i data-feather="{{ $key.icon }}"></i></a>
+					{{- end -}}
+					{{- with .Site.Params.cv_name -}}
+						| <a href="{{ . }}">[cv]</a>
+					{{- end -}}
+				</ul>
+			</nav>
+			{{- with .Params.Email -}}
+			<a href="mailto:{{ . }}">{{ . }}</a>
+			{{- end -}}
 		</div>
 	</div>
-	{{ partial "footer.html" . }}
-</body>
-</html>
+
+	<nav class="nav">
+		<ul class="flat">
+			{{ range .Site.Menus.main }}
+			<li>
+				<a href="{{ .URL }}">{{ .Name }}</a>
+			</li>
+			{{ end }}
+		</ul>
+	</nav>
+</div>
+{{ end }}
+
+{{ define "main" }}
+	{{ .Content }}
+{{ end }}

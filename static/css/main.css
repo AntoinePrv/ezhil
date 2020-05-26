@@ -254,6 +254,14 @@ pre code {
     text-transform: capitalize;
 }
 
+.header nav ul.flat a {
+    text-decoration: none;
+}
+
+.header nav ul.flat a.active {
+    border-bottom: solid;
+}
+
 .header .site-description {
     display: flex;
     justify-content: space-between;

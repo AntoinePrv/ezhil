@@ -8,15 +8,33 @@
 
 	{{ with .Content }}{{ . }}{{ end }}
 
-	<ul class="posts">
-		{{- range .Data.Pages -}}
-		{{- if (in (.Site.Params.excludedTypes | default (slice "page")) .Type) -}}
-		{{- else -}}
-		<li class="post">
-			<a href="{{ .RelPermalink }}">{{.Title}}</a> <span class="meta">{{ dateFormat "Jan 2, 2006" .Date }}{{ if .Draft }} <span class="draft-label">DRAFT</span> {{ end }}</span>
-		</li>
-		{{- end -}}
-		{{- end -}}
-	</ul>
+	<div class="recent-posts section">
+		<div class="posts">
+			{{ $pages := .Data.Pages }}
+			{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
+			{{ range $paginator.Pages.GroupByDate "2006" }}
+				<h2>{{ .Key }}</h2>
+				{{ range .Pages }}
+					<div class="post">
+						<div class="meta">
+							{{ dateFormat "Jan 2, 2006" .Date }}
+							{{ if .Draft }}
+								<span class="draft-label">DRAFT</span>
+							{{ end }}
+						</div>
+						<a class="title" href="{{ .RelPermalink }}">{{.Title}}</a> &mdash;
+						<span class="description">
+							{{ if isset .Params "description" }}
+								{{ .Description }}
+							{{ else }}
+								{{ .Summary }}&hellip;
+							{{ end }}
+						</span>
+					</div>
+				{{ end }}
+			{{ end }}
+			{{ template "partials/paginator.html" . }}
+		</div>
+	</div>
 </div>
 {{ end }}

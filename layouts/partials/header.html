@@ -1,5 +1,4 @@
 <div class="header">
-	<base href="{{ .Site.BaseURL }}">
 	<div class="site-description">
 		<h1 class="site-title"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
 		<nav class="nav social">
@@ -8,7 +7,7 @@
 				<a href="{{ $key.url }}" title="{{ $key.name }}"><i data-feather="{{ $key.icon }}"></i></a>
 				{{- end -}}
 				{{ with .Site.Params.cv_name }}
-					| <a href="{{ . }}">[cv]</a>
+					| <a href="/{{ . }}">[cv]</a>
 				{{ end }}
 			</ul>
 		</nav>
